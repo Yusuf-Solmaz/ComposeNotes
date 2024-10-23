@@ -1,6 +1,5 @@
 package com.example.unit1firstandroidapp
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unit1firstandroidapp.ui.theme.Unit1FirstAndroidAppTheme
 
-
+/**
+ Practice 1
+ */
 @Composable
-fun Practice(modifier: Modifier = Modifier){
-    Column(modifier = modifier){
+fun Practice(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
         Image(
             painter = painterResource(R.drawable.bg_compose_background),
             contentDescription = "compose image",
@@ -54,11 +55,13 @@ fun Practice(modifier: Modifier = Modifier){
     }
 }
 
-
+/**
+Practice 2
+ */
 @Composable
-fun Practice2(modifier: Modifier){
+fun Practice2(modifier: Modifier) {
     Column(
-        modifier= modifier,
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -72,124 +75,90 @@ fun Practice2(modifier: Modifier){
             modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
         )
         Text(
-            text = stringResource(R.string.nice_work),
-            fontSize = 16.sp
+            text = stringResource(R.string.nice_work), fontSize = 16.sp
         )
     }
 }
 
+/**
+Practice 3
+ */
 @Composable
-fun Practice3(modifier: Modifier){
+fun Practice3(modifier: Modifier) {
     Column(modifier = modifier) {
 
         Row(
             modifier = Modifier.weight(1f)
         ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(Color(0xFFEADDFF)),
-            ){
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.text_composable),
-                        fontWeight = FontWeight.Bold,
-                        modifier= Modifier.padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.displays_text_and_follows_the_recommended_material_design_guidelines),
-                        textAlign = TextAlign.Justify,
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(Color(0xFFD0BCFF)),
-            ){
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.image_composable),
-                        fontWeight = FontWeight.Bold,
-                        modifier= Modifier.padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.creates_a_composable_that_lays_out_and_draws_a_given_painter_class_object),
-                        textAlign = TextAlign.Justify,
-                    )
-                }
-            }
-
+            Quarter(
+                title = stringResource(R.string.text_composable),
+                description = stringResource(R.string.displays_text_and_follows_the_recommended_material_design_guidelines),
+                bgColor = Color(0xFFEADDFF),
+                modifier = Modifier.weight(1f)
+            )
+            Quarter(
+                title = stringResource(R.string.image_composable),
+                description = stringResource(R.string.creates_a_composable_that_lays_out_and_draws_a_given_painter_class_object),
+                bgColor = Color(0xFFD0BCFF),
+                modifier = Modifier.weight(1f)
+            )
         }
 
         Row(
             modifier = Modifier.weight(1f)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(Color(0xFFB69DF8)),
-            ){
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.row_composable),
-                        fontWeight = FontWeight.Bold,
-                        modifier= Modifier.padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.a_layout_composable_that_places_its_children_in_a_horizontal_sequence),
-                        textAlign = TextAlign.Justify,
-                    )
-                }
-            }
+            Quarter(
+                title = stringResource(R.string.row_composable),
+                description = stringResource(R.string.a_layout_composable_that_places_its_children_in_a_horizontal_sequence),
+                bgColor = Color(0xFFB69DF8),
+                modifier = Modifier.weight(1f)
+            )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-                    .background(Color(0xFFF6EDFF)),
-            ){
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = stringResource(R.string.column_composable),
-                        fontWeight = FontWeight.Bold,
-                        modifier= Modifier.padding(bottom = 16.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.a_layout_composable_that_places_its_children_in_a_vertical_sequence),
-                        textAlign = TextAlign.Justify,
-                    )
-                }
-            }
-
+            Quarter(
+                title = stringResource(R.string.column_composable),
+                description = stringResource(R.string.a_layout_composable_that_places_its_children_in_a_vertical_sequence),
+                bgColor = Color(0xFFF6EDFF),
+                modifier = Modifier.weight(1f)
+            )
         }
-
     }
+}
+
+@Composable
+fun Quarter(title: String, description: String, bgColor: Color, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(bgColor),
+    ) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Text(
+                text = description,
+                textAlign = TextAlign.Justify,
+            )
+        }
+    }
+}
+
+/**
+Practice 4
+ */
+
+@Composable
+fun Practice4(modifier: Modifier){
+
 }
 
 @Preview(showBackground = true)
