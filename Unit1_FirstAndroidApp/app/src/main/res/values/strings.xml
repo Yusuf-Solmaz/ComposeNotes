@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Unit 1 First Android App</string>
+    <string name="happy_birth_day">Happy Birth Day %1$s</string>
+    <string name="from">From %1$s</string>
+    <string name="yusuf">Yusuf</string>
+    <string name="ahmet">Ahmet</string>
 </resources>
