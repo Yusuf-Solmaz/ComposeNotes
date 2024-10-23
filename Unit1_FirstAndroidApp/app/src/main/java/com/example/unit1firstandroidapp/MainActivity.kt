@@ -4,18 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,16 +63,44 @@ Good Practice
 Modifier'ın Composable'fun kullanıldığı yere iletilmesi iyi bir pratiktir.
 
 
- ----------------------------------------------------------------
+----------------------------------------------------------------
 
- Resim Yüklerken Dikkat Edilmesi Gereken Nokta:
+Resim Yüklerken Dikkat Edilmesi Gereken Nokta:
 
- Resourca manager ile resim yüklerken fotoğraflar ve arka plan görsellerini,
- yeniden boyutlandırma davranışını durduran, çizilebilir-nodpi klasörüne yerleştirmelisiniz. Çünkü
- Yani bir cihaz inç kare başına 160 piksele sahipken, başka bir cihaz aynı alana 480 piksel sığdırıyor.
- Piksel yoğunluğundaki bu değişiklikleri dikkate almazsanız sistem, görüntülerinizi ölçekleyebilir; bu
- da görüntülerin bulanık olmasına, çok fazla bellek tüketen büyük görüntülere veya görüntülerin yanlış
- boyutlandırılmasına neden olabilir.
+Resourca manager ile resim yüklerken fotoğraflar ve arka plan görsellerini,
+yeniden boyutlandırma davranışını durduran, çizilebilir-nodpi klasörüne yerleştirmelisiniz. Çünkü
+Yani bir cihaz inç kare başına 160 piksele sahipken, başka bir cihaz aynı alana 480 piksel sığdırıyor.
+Piksel yoğunluğundaki bu değişiklikleri dikkate almazsanız sistem, görüntülerinizi ölçekleyebilir; bu
+da görüntülerin bulanık olmasına, çok fazla bellek tüketen büyük görüntülere veya görüntülerin yanlış
+boyutlandırılmasına neden olabilir.
+
+
+----------------------------------------------------------------
+
+Box Nedir?
+
+Öğeleri birbirinin üzerine yığmak için Box kullanılır. Box düzeni ayrıca içerdiği öğelerin
+belirli hizalamasını yapılandırmanıza da olanak tanır.
+
+
+
+----------------------------------------------------------------
+
+Image Scale
+
+Resim ölçeklendirirken contentScale (ContentScale) kullanılır. Eğer arguman verilmezse default olarak
+ContentScale.Fit kullanılır.
+
+Opaklık: alpha argümanı ile ayarlanır. Default 1.0f'dir. 0 ile 1 arasında değer verilerek opaklık ayarlanır.
+
+
+
+----------------------------------------------------------------
+
+String Dosyası Kullanımı
+
+Sabit kodlanmış dize, doğrudan uygulamanızın koduna yazılan dizedir. Sabit kodlanmış dizeler, uygulamanızın
+diğer dillere çevrilmesini ve dizelerin uygulamanızın farklı yerlerinde yeniden kullanılmasını zorlaştırır.
  */
 
 
@@ -90,6 +119,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                 )
 
+
             }
         }
     }
@@ -97,27 +127,38 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
+    Box(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(R.drawable.androidparty),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                alpha = 0.6f
+            )
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-    ) {
-        Text(
-            text = "Happy Birth Day $message",
-            fontSize = 30.sp,
-            lineHeight = 30.sp,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = modifier
+            ) {
+                Text(
+                    stringResource(R.string.happy_birth_day, message),
+                    modifier= Modifier
+                        .align(alignment = Alignment.CenterHorizontally),
+                    fontSize = 30.sp,
+                    lineHeight = 30.sp,
+                )
 
-        Text(
-            text = "From $from",
-            fontSize = 36.sp,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(alignment = Alignment.End)
-        )
+                Text(
+                    text = stringResource(R.string.from, from),
+                    fontSize = 36.sp,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(alignment = Alignment.CenterHorizontally)
+                )
+            }
+        }
     }
+
 }
 
 
@@ -125,6 +166,13 @@ fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     Unit1FirstAndroidAppTheme {
-        GreetingText(message = "Yusuf", from = "Ahmet")
+        GreetingText(
+            message = stringResource(R.string.yusuf),
+            from = stringResource(R.string.ahmet),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize()
+        )
+
     }
 }
