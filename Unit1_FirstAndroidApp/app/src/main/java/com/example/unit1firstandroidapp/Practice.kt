@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -174,7 +173,8 @@ fun Practice4(modifier: Modifier = Modifier){
         ) {
             Image(
                 painter = painterResource(R.drawable.android_logo),
-                contentDescription = ""
+                contentDescription = "",
+                modifier = Modifier.size(250.dp)
             )
             Text(
                 text = "Full Name"
