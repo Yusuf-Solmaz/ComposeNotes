@@ -60,7 +60,8 @@ sp fonksiyonu Int, Float ve Double'ın extension fonksiyonudur.
 
 Good Practice
 
-Modifier'ın Composable'fun kullanıldığı yere iletilmesi iyi bir pratiktir.
+Modifier'ın Composable'fun kullanıldığı yere iletilmesi iyi bir pratiktir. Çünkü iletildiğinde kullanıldığı
+yerdeki ihtiyaca göre Composable Modifier'ı fonksiyonu değiştirilebilir.
 
 
 ----------------------------------------------------------------
