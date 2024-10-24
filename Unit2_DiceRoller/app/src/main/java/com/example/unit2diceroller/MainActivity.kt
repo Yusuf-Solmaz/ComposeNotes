@@ -32,8 +32,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             Unit2DiceRollerTheme {
 
-                DiceRollerApp()
-
+                //DiceRollerApp()
+                Lemonade()
             }
         }
     }

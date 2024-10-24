@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Unit 2 Dice Roller</string>
     <string name="roll">Roll</string>
+    <string name="lemon_tree_select">Tap the lemon tree to select a lemon\n</string>
+    <string name="keep_tapping">Keep tapping the lemon to squeeze it\n\n</string>
+    <string name="tap_lemonade">Tap the lemonade to drink it\n</string>
+    <string name="tap_empty_glass">Tap the empty glass to start again\n\n</string>
 </resources>
