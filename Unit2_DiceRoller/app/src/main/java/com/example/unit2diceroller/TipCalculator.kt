@@ -12,11 +12,15 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,7 +31,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
@@ -57,7 +65,10 @@ uzun içerikler ekranın boyutunu aşarsa, kullanıcı yukarı-aşağı kaydıra
 @Composable
 fun TipCalculator(modifier: Modifier= Modifier){
 
-    var tipAmount by rememberSaveable{ mutableIntStateOf(0) }
+    var tipAmount by rememberSaveable{ mutableStateOf("") }
+    var amount by rememberSaveable{ mutableStateOf("") }
+
+    tipAmount = calculateTip(amount.toDoubleOrNull() ?: 0.0)
 
     Column(
         modifier = modifier
@@ -76,19 +87,19 @@ fun TipCalculator(modifier: Modifier= Modifier){
             text = stringResource(R.string.calculate_tip)
         )
         Spacer(modifier.size(16.dp))
+        CustomAmountTextField(
+            modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+            value = amount,
+            onChange = {
+                amount = it
+            }
+        )
+        Spacer(modifier.size(16.dp))
         Text(
-            text = stringResource(R.string.tip_amount, tipAmount),
+            text = if (amount == "") "First, enter an amount." else stringResource(R.string.tip_amount, "$tipAmount $"),
             style = TextStyle(
                 fontSize = 25.sp
             )
-        )
-        OutlinedTextField(
-            value = "",
-            label = {
-                Text("Enter Your Amount:")
-            },
-            onValueChange = {},
-            modifier = modifier
         )
     }
 }
@@ -96,6 +107,34 @@ fun TipCalculator(modifier: Modifier= Modifier){
 private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
     val tip = tipPercent / 100 * amount
     return NumberFormat.getCurrencyInstance().format(tip)
+}
+
+@Composable
+fun CustomAmountTextField(
+    value: String, // State Hoisting
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+){
+    OutlinedTextField(
+        value = value,
+        trailingIcon = {
+            Icon(
+                painter = painterResource(R.drawable.ic_amount),
+                contentDescription = ""
+            )
+        },
+        label = {
+            Text("Enter Your Amount:")
+        },
+        onValueChange = onChange,
+        modifier = modifier,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        singleLine = true, // kullanıcının input alanını tek bir satır ile sınırlar.
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.Black,
+            focusedBorderColor = Color.Green
+        )
+    )
 }
 
 @Preview(showBackground = true)

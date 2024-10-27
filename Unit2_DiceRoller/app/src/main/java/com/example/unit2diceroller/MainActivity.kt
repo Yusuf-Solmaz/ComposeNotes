@@ -33,7 +33,8 @@ class MainActivity : ComponentActivity() {
             Unit2DiceRollerTheme {
 
                 //DiceRollerApp()
-                Lemonade()
+                //Lemonade()
+                TipCalculator()
             }
         }
     }
