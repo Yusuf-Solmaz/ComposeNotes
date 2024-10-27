@@ -11,7 +11,6 @@ import java.text.NumberFormat
 
  * Test yöntemleri, normal uygulama yöntemleri gibi mantık kullanmazlar. Nasıl uygulandığını
  önemsemezler; yalnızca belirli bir girdiye karşılık beklenen bir çıktıyı kontrol ederler.
-
  */
 
 
