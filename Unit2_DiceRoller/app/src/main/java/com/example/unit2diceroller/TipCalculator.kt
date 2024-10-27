@@ -3,6 +3,7 @@ package com.example.unit2diceroller
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -79,6 +80,26 @@ ilerideki iş yükünüzü azaltır.
 
 otomatik testler, yazılım aracılığıyla yürütülen testlerdir; manuel testler ise bir kişinin doğrudan
 bir cihazla etkileşimde bulunarak gerçekleştirdiği testlerdir.
+
+Başlangıçta, uygulamanızda gerçekten testlere ihtiyacınız olmadığı gibi görünebilir, ancak test etme,
+her boyut ve karmaşıklıktaki uygulamalarda gereklidir.
+
+Type of automated tests
+
+    Local tests: Belirli bir kod parçasını doğrudan test eden otomatik test türleridir. Local testlerle
+işlevleri, sınıfları ve özellikleri test edebilirsiniz. Local testler, cihaz veya emülatör gerektirmeden
+geliştirme ortamında çalıştırılır, yani bilgisayarınızda çalışır.
+
+    Instrumentation tests: Android geliştirme için, bir Instrumentation testi bir UI testidir.
+Instrumentation testleri, Android API'sine ve platform API'lerine ve hizmetlerine bağlı uygulama parçalarını
+test etmenizi sağlar.
+
+Yerel testlerin aksine, UI testleri bir uygulamayı veya uygulamanın bir parçasını başlatır, kullanıcı
+etkileşimlerini simüle eder ve uygulamanın uygun bir şekilde tepki verip vermediğini kontrol eder.
+
+ * private fonksiyonlar test'e kapalıdır. Bu yüzden test edeceğimiz fonksiyonlar public veya internal olmalı
+ internal fonksiyonu testte görünür kılmak için @VisibleForTesting anotasyonu kullanılır.
+
  */
 
 @Composable
@@ -157,7 +178,8 @@ fun TipCalculator(modifier: Modifier= Modifier){
     }
 }
 
-private fun calculateTip(isRoundable:Boolean,amount: Double, tipPercent: Double): String {
+@VisibleForTesting
+internal fun calculateTip(isRoundable:Boolean,amount: Double, tipPercent: Double): String {
     val tip = if (isRoundable){
         round(tipPercent / 100 * amount)
     }else{
