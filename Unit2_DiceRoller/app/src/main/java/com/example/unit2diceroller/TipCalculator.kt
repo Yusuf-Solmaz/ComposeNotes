@@ -1,9 +1,7 @@
 package com.example.unit2diceroller
 
-
-import android.annotation.SuppressLint
-import android.graphics.fonts.Font
 import android.util.Log
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,26 +9,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -70,6 +61,17 @@ gelmesini sağlar. rememberScrollState() ile bir kaydırma durumu (scroll state)
 uzun içerikler ekranın boyutunu aşarsa, kullanıcı yukarı-aşağı kaydırarak içeriği gezebilir.
 
 
+---------------------------------------------------------------------
+
+Switch Button kullanımında Track: sağa sola haraket eden iconun gezindiği alan, Thumb icon çerçevesi.
+
+---------------------------------------------------------------------
+
+.verticalScroll(rememberScrollState()): Column'un ekranı  kaydırılabilir olmasını sağlar.
+.horizontalScroll(rememberScrollState()): Row'un ekranı  kaydırılabilir olmasını sağlar.
+
+---------------------------------------------------------------------
+
  */
 
 @Composable
@@ -93,7 +95,7 @@ fun TipCalculator(modifier: Modifier= Modifier){
             .statusBarsPadding()
             .fillMaxSize()
             .padding(20.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()) // ekranı yatayda kaydırılabilir olmasını sağlar.
             .safeDrawingPadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -110,7 +112,7 @@ fun TipCalculator(modifier: Modifier= Modifier){
                 .padding(bottom = 32.dp)
                 .fillMaxWidth(),
             value = amount,
-            leadingIcon = painterResource(R.drawable.ic_amount),
+            leadingIcon = R.drawable.ic_amount,
             label = R.string.bill_amount,
             onChange = {
                 amount = it
@@ -122,30 +124,25 @@ fun TipCalculator(modifier: Modifier= Modifier){
                 .padding(bottom = 32.dp)
                 .fillMaxWidth(),
             value = tipPercentage,
-            leadingIcon = painterResource(R.drawable.ic_amount),
+            leadingIcon = R.drawable.ic_amount,
             label = R.string.tip_percentage,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             onChange = {
                 tipPercentage = it
             }
         )
-        Spacer(modifier.size(16.dp))
-        Row(Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-            Text(
-                text = "Round up tip?"
-            )
-
-            CustomRoundSwitchTipButton(
-                isRoundable = isRoundable,
-                onCheckedChange = {
-                    isRoundable = it
-                }
-            )
-        }
-        Spacer(modifier.size(16.dp))
+        RoundTheTipRow(
+            isRoundable=isRoundable,
+            onCheckedChange = {
+                isRoundable = it
+            },
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
         Text(
-            text = if (amount != "" && tipPercentage !="") stringResource(R.string.tip_amount, "$tipAmount $") else "Fill the Blanks",
+            text = if (amount != "" && tipPercentage !="") stringResource(R.string.tip_amount, "$tipAmount $") else stringResource(R.string.fill_the_blanks),
             style = TextStyle(
                 fontSize = 25.sp
             )
@@ -163,6 +160,26 @@ private fun calculateTip(isRoundable:Boolean,amount: Double, tipPercent: Double)
 }
 
 @Composable
+fun RoundTheTipRow(isRoundable: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier= Modifier){
+    Row(
+        modifier
+            .fillMaxWidth()
+            .size(48.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Round up tip?"
+        )
+
+        CustomRoundSwitchTipButton(
+            isRoundable = isRoundable,
+            onCheckedChange = onCheckedChange
+        )
+    }
+}
+
+@Composable
 fun CustomRoundSwitchTipButton(
     modifier: Modifier= Modifier,
     isRoundable: Boolean,
@@ -173,7 +190,8 @@ fun CustomRoundSwitchTipButton(
         onCheckedChange = onCheckedChange,
         colors = SwitchDefaults.colors(
             checkedBorderColor = Color.Green,
-            uncheckedBorderColor = Color.Black
+            uncheckedBorderColor = Color.Black,
+            uncheckedThumbColor = Color.White
         )
     )
 }
@@ -181,17 +199,21 @@ fun CustomRoundSwitchTipButton(
 
 @Composable
 fun CustomAmountTextField(
+    @DrawableRes leadingIcon: Int,
+    @StringRes label: Int, // buraya gelecek değeri Resources içindeki Strings'den geleceğini garantiledik.
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
+        keyboardType = KeyboardType.Number,
+        imeAction = ImeAction.Next
+    ),
     value: String, // State Hoisting
     onChange: (String) -> Unit,
-    leadingIcon: Painter,
-    @StringRes label: Int, // buraya gelecek değeri Resources içindeki Strings'den geleceğini garantiledik.
     modifier: Modifier = Modifier
 ){
     OutlinedTextField(
         value = value,
         leadingIcon = {
             Icon(
-                painter = leadingIcon,
+                painter = painterResource(leadingIcon),
                 contentDescription = ""
             )
         },
@@ -200,10 +222,7 @@ fun CustomAmountTextField(
         },
         onValueChange = onChange,
         modifier = modifier,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Go // klavye'nin sağ altındaki "enter" işareti simgesi buradan değiştirilebilir
-            ),
+        keyboardOptions = keyboardOptions, // klavye'nin sağ altındaki "enter" işareti action'ı buradan değiştirilebilir. Default: ImeAction.Done
         singleLine = true, // kullanıcının input alanını tek bir satır ile sınırlar.
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Black,
