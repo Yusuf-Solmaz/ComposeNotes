@@ -1,16 +1,22 @@
 package com.example.unit2diceroller
 
 
+import android.annotation.SuppressLint
 import android.graphics.fonts.Font
+import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -27,18 +35,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
+import kotlin.math.round
 
 /**
 State Hoisting Nedir?
@@ -67,8 +77,16 @@ fun TipCalculator(modifier: Modifier= Modifier){
 
     var tipAmount by rememberSaveable{ mutableStateOf("") }
     var amount by rememberSaveable{ mutableStateOf("") }
+    var tipPercentage by rememberSaveable{ mutableStateOf("") }
+    var isRoundable by rememberSaveable{ mutableStateOf(false) }
 
-    tipAmount = calculateTip(amount.toDoubleOrNull() ?: 0.0)
+    Log.i("isRoundable",isRoundable.toString())
+
+    tipAmount = calculateTip(
+        amount = amount.toDoubleOrNull() ?: 0.0,
+        tipPercent = tipPercentage.toDoubleOrNull() ?: 0.0,
+        isRoundable = isRoundable
+    )
 
     Column(
         modifier = modifier
@@ -88,15 +106,46 @@ fun TipCalculator(modifier: Modifier= Modifier){
         )
         Spacer(modifier.size(16.dp))
         CustomAmountTextField(
-            modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth(),
             value = amount,
+            leadingIcon = painterResource(R.drawable.ic_amount),
+            label = R.string.bill_amount,
             onChange = {
                 amount = it
             }
         )
+
+        CustomAmountTextField(
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth(),
+            value = tipPercentage,
+            leadingIcon = painterResource(R.drawable.ic_amount),
+            label = R.string.tip_percentage,
+            onChange = {
+                tipPercentage = it
+            }
+        )
+        Spacer(modifier.size(16.dp))
+        Row(Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+            Text(
+                text = "Round up tip?"
+            )
+
+            CustomRoundSwitchTipButton(
+                isRoundable = isRoundable,
+                onCheckedChange = {
+                    isRoundable = it
+                }
+            )
+        }
         Spacer(modifier.size(16.dp))
         Text(
-            text = if (amount == "") "First, enter an amount." else stringResource(R.string.tip_amount, "$tipAmount $"),
+            text = if (amount != "" && tipPercentage !="") stringResource(R.string.tip_amount, "$tipAmount $") else "Fill the Blanks",
             style = TextStyle(
                 fontSize = 25.sp
             )
@@ -104,31 +153,57 @@ fun TipCalculator(modifier: Modifier= Modifier){
     }
 }
 
-private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
-    val tip = tipPercent / 100 * amount
+private fun calculateTip(isRoundable:Boolean,amount: Double, tipPercent: Double): String {
+    val tip = if (isRoundable){
+        round(tipPercent / 100 * amount)
+    }else{
+        tipPercent / 100 * amount
+    }
     return NumberFormat.getCurrencyInstance().format(tip)
 }
+
+@Composable
+fun CustomRoundSwitchTipButton(
+    modifier: Modifier= Modifier,
+    isRoundable: Boolean,
+    onCheckedChange:(Boolean)-> Unit
+){
+    Switch(
+        checked = isRoundable,
+        onCheckedChange = onCheckedChange,
+        colors = SwitchDefaults.colors(
+            checkedBorderColor = Color.Green,
+            uncheckedBorderColor = Color.Black
+        )
+    )
+}
+
 
 @Composable
 fun CustomAmountTextField(
     value: String, // State Hoisting
     onChange: (String) -> Unit,
+    leadingIcon: Painter,
+    @StringRes label: Int, // buraya gelecek değeri Resources içindeki Strings'den geleceğini garantiledik.
     modifier: Modifier = Modifier
 ){
     OutlinedTextField(
         value = value,
-        trailingIcon = {
+        leadingIcon = {
             Icon(
-                painter = painterResource(R.drawable.ic_amount),
+                painter = leadingIcon,
                 contentDescription = ""
             )
         },
         label = {
-            Text("Enter Your Amount:")
+            Text(text = stringResource(label))
         },
         onValueChange = onChange,
         modifier = modifier,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Go // klavye'nin sağ altındaki "enter" işareti simgesi buradan değiştirilebilir
+            ),
         singleLine = true, // kullanıcının input alanını tek bir satır ile sınırlar.
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.Black,

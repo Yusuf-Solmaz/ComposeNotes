@@ -7,6 +7,8 @@
     <string name="tap_empty_glass">Tap the empty glass to start again\n\n</string>
     <string name="calculate_tip">Calculate Tip</string>
     <string name="tip_amount">Tip Amount: %1$s</string>
+    <string name="bill_amount">Bill Amount:</string>
+    <string name="tip_percentage">Tip Percentage:</string>
 
 
 </resources>
