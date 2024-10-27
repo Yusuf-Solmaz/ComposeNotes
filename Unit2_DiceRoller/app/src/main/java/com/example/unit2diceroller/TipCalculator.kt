@@ -72,6 +72,13 @@ Switch Button kullanımında Track: sağa sola haraket eden iconun gezindiği al
 
 ---------------------------------------------------------------------
 
+Automated Tests
+
+Uygulamanızda yeni bir özellik oluşturduğunuz her seferde bir test oluşturmak, uygulamanız büyüdükçe
+ilerideki iş yükünüzü azaltır.
+
+otomatik testler, yazılım aracılığıyla yürütülen testlerdir; manuel testler ise bir kişinin doğrudan
+bir cihazla etkileşimde bulunarak gerçekleştirdiği testlerdir.
  */
 
 @Composable
@@ -181,7 +188,6 @@ fun RoundTheTipRow(isRoundable: Boolean, onCheckedChange: (Boolean) -> Unit, mod
 
 @Composable
 fun CustomRoundSwitchTipButton(
-    modifier: Modifier= Modifier,
     isRoundable: Boolean,
     onCheckedChange:(Boolean)-> Unit
 ){
