@@ -34,7 +34,8 @@ class MainActivity : ComponentActivity() {
 
                 //DiceRollerApp()
                 //Lemonade()
-                TipCalculator()
+                //TipCalculator()
+                ArtSpace()
             }
         }
     }
