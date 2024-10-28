@@ -1,6 +1,8 @@
 package com.example.unit2diceroller
 
+import android.util.Log
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +29,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 /**
 Jetpack Compose Gestures, kullanıcı etkileşimlerini (dokunma, kaydırma, sürükleme gibi) ele almak için
@@ -34,6 +41,16 @@ sağlanan bir API'dir. Gesture (jestler), dokunma ekranlarında yaygın olan har
 
 @Composable
 fun ArtSpace(modifier: Modifier = Modifier) {
+
+    val artList = listOf<Art>(
+        Art(R.drawable.lemon_drink,"Still Life of Blue Rose and Other Flowers","Owen Scott (1)","2023"),
+        Art(R.drawable.lemon_restart,"Still Life","Owen Scott (2)","2023"),
+        Art(R.drawable.lemon_squeeze,"Still Life of Blue Rose","Owen Scott (3)","2023"),
+    )
+    var artListState by remember {
+        mutableIntStateOf(0)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,15 +60,30 @@ fun ArtSpace(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        ArtImage()
+        ArtImage(
+            art = artList[artListState]
+        )
         Spacer(Modifier.size(50.dp))
-        ImageDescription()
-        PrevNextButtons()
+        ImageDescription(art = artList[artListState])
+        PrevNextButtons(
+            onPrevClick = {
+                if (artListState > 0) {
+                    artListState--
+                    Log.d("ArtSpace", "Previous button clicked: $artListState")
+                }
+            },
+            onNextClick = {
+                if (artListState < artList.size - 1) {
+                    artListState++
+                    Log.d("ArtSpace", "Next button clicked: $artListState")
+                }
+            }
+        )
     }
 }
 
 @Composable
-fun ArtImage(modifier: Modifier = Modifier) {
+fun ArtImage(art: Art,modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Card(
@@ -61,7 +93,7 @@ fun ArtImage(modifier: Modifier = Modifier) {
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        Toast.makeText(context, "Still Life of Blue Rose and Other Flowers", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, art.imageDescription, Toast.LENGTH_SHORT).show()
                     }
                 )
             },
@@ -71,7 +103,7 @@ fun ArtImage(modifier: Modifier = Modifier) {
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(R.drawable.lemon_drink),
+                painter = painterResource(art.image),
                 contentDescription = ""
             )
         }
@@ -79,17 +111,17 @@ fun ArtImage(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageDescription(modifier: Modifier = Modifier) {
+fun ImageDescription(art: Art,modifier: Modifier = Modifier) {
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Thin, fontSize = 24.sp)) {
-            append("Still Life of Blue Rose and Other Flowers")
+            append(art.imageDescription)
         }
         append("\n")
         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-            append("Owen Scott ")
+            append(art.artistName)
         }
         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
-            append("(2021)")
+            append(art.artYear)
         }
     }
 
@@ -106,15 +138,15 @@ fun ImageDescription(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PrevNextButtons(modifier: Modifier = Modifier) {
+fun PrevNextButtons(modifier: Modifier = Modifier,onPrevClick: () -> Unit,onNextClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        CustomButton(R.string.previous) { }
-        CustomButton(R.string.next) { }
+        CustomButton(text = R.string.previous, onClick = onPrevClick)
+        CustomButton(text = R.string.next, onClick = onNextClick)
     }
 }
 
@@ -130,6 +162,8 @@ fun CustomButton(@StringRes text: Int, onClick: () -> Unit) {
         Text(text = stringResource(text))
     }
 }
+
+data class Art(@DrawableRes val image:Int,val imageDescription: String,val artistName: String,val artYear: String)
 
 @Preview(showBackground = true)
 @Composable
