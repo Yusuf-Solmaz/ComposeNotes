@@ -1,8 +1,10 @@
 package com.example.unit2diceroller
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -48,10 +52,19 @@ fun ArtSpace(modifier: Modifier = Modifier) {
 
 @Composable
 fun ArtImage(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .size(width = 300.dp, height = 450.dp)
-            .padding(top = 32.dp),
+            .padding(top = 32.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        Toast.makeText(context, "Still Life of Blue Rose and Other Flowers", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
