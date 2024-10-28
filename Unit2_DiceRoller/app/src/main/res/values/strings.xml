@@ -10,4 +10,6 @@
     <string name="bill_amount">Bill Amount:</string>
     <string name="tip_percentage">Tip Percentage:</string>
     <string name="fill_the_blanks">Fill the Blanks</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 </resources>
