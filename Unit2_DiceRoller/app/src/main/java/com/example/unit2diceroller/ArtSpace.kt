@@ -22,6 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+Jetpack Compose Gestures, kullanıcı etkileşimlerini (dokunma, kaydırma, sürükleme gibi) ele almak için
+sağlanan bir API'dir. Gesture (jestler), dokunma ekranlarında yaygın olan hareketlerle (örneğin sürüklemek,
+çift tıklamak, yakınlaştırmak) kullanıcı arayüzü bileşenlerine tepki vermeyi sağlar.
+ */
+
 @Composable
 fun ArtSpace(modifier: Modifier = Modifier) {
     Column(
