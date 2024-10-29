@@ -1,11 +1,11 @@
 package com.example.unit2diceroller
 
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -51,6 +51,23 @@ fun ArtSpace(modifier: Modifier = Modifier) {
         mutableIntStateOf(0)
     }
 
+    val goToNext : () -> Unit = {
+        if (artListState < artList.size - 1) {
+            artListState++
+        } else {
+            artListState = 0
+        }
+    }
+
+
+    val goToPrev: () -> Unit = {
+        if (artListState > 0) {
+            artListState--
+        } else {
+            artListState = artList.size - 1
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -61,35 +78,40 @@ fun ArtSpace(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         ArtImage(
-            art = artList[artListState]
+            art = artList[artListState],
+            onNext = goToNext,
+            onPrev = goToPrev
         )
         Spacer(Modifier.size(50.dp))
         ImageDescription(art = artList[artListState])
         PrevNextButtons(
-            onPrevClick = {
-                if (artListState > 0) {
-                    artListState--
-                    Log.d("ArtSpace", "Previous button clicked: $artListState")
-                }
-            },
-            onNextClick = {
-                if (artListState < artList.size - 1) {
-                    artListState++
-                    Log.d("ArtSpace", "Next button clicked: $artListState")
-                }
-            }
+            onPrevClick = goToNext,
+            onNextClick = goToPrev
         )
     }
 }
 
 @Composable
-fun ArtImage(art: Art,modifier: Modifier = Modifier) {
+fun ArtImage(art: Art, modifier: Modifier = Modifier, onNext: () -> Unit, onPrev: () -> Unit) {
     val context = LocalContext.current
 
     Card(
         modifier = Modifier
             .size(width = 300.dp, height = 450.dp)
             .padding(top = 32.dp)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    // Sürükleme algılaması için bir eşik tanımlıyoruz.
+                    val threshold = 50.dp.toPx()
+                    if (dragAmount.x > threshold) {  // Sağa sürüklendi
+                        onNext()
+                        change.consume()
+                    } else if (dragAmount.x < -threshold) {  // Sola sürüklendi
+                        onPrev()
+                        change.consume()
+                    }
+                }
+            }
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
@@ -104,7 +126,7 @@ fun ArtImage(art: Art,modifier: Modifier = Modifier) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painterResource(art.image),
-                contentDescription = ""
+                contentDescription = null
             )
         }
     }
