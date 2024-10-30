@@ -55,6 +55,18 @@ import com.example.unit3_affirmationlist.ui.theme.Unit3_AffirmationListTheme
 
  Liste görünümü için LazyColumn/LazyRow kullanılır. Bu iki bileşen listeye ekleme yapıldığında sadece
  yeni gelen veriyi recompositiona alır.
+
+
+ ----------------------------------------------------------------
+
+ Bir vektör çizilebilir dosya ile bir bitmap görüntüsü her ikisi de bir grafiği tanımlasa da aralarında
+ önemli farklar vardır.
+
+ Bitmap görüntüler yalnızca her pikseldeki renk bilgilerini saklar ve içerdiği görüntü hakkında daha
+ fazla bilgi taşımaz.
+
+ Vektör grafikler ise, şekilleri noktalar, çizgiler ve eğrilerle tanımlar. Bu grafikler her ekran yoğunluğunda
+ kalite kaybı olmadan ölçeklenebilir.
  */
 
 class MainActivity : ComponentActivity() {
