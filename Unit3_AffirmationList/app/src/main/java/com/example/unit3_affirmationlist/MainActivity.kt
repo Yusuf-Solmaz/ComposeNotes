@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unit3_affirmationlist.data.Affirmation
-import com.example.unit3_affirmationlist.data.Datasource
+import com.example.unit3_affirmationlist.data.GridDataSource
 import com.example.unit3_affirmationlist.ui.theme.Unit3_AffirmationListTheme
 
 
@@ -77,15 +77,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Unit3_AffirmationListTheme {
-                AffirmationApp()
+                TopicGridApp()
             }
         }
     }
 }
 
 @Composable
-fun AffirmationApp(modifier: Modifier = Modifier) {
-    val data = Datasource().loadAffirmations()
+fun TopicGridApp(modifier: Modifier = Modifier){
+    val data = GridDataSource.topics
     val layoutDirection = LocalLayoutDirection.current
     Surface(
         modifier = modifier
@@ -99,7 +99,28 @@ fun AffirmationApp(modifier: Modifier = Modifier) {
             ),
     ) {
 
-        AffirmationList(affirmationList = data)
+        VerticalTopicGrid(data)
+
+    }
+}
+
+@Composable
+fun AffirmationApp(modifier: Modifier = Modifier) {
+  //  val data = Datasource().loadAffirmations()
+    val layoutDirection = LocalLayoutDirection.current
+    Surface(
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .padding(
+                start = WindowInsets.safeDrawing.asPaddingValues()
+                    .calculateStartPadding(layoutDirection),
+                end = WindowInsets.safeDrawing.asPaddingValues()
+                    .calculateEndPadding(layoutDirection),
+            ),
+    ) {
+
+     //   AffirmationList(affirmationList = data)
 
     }
 
@@ -153,6 +174,6 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier= Modifier) {
 @Composable
 fun GreetingPreview() {
     Unit3_AffirmationListTheme {
-        AffirmationApp()
+        TopicGridApp()
     }
 }
