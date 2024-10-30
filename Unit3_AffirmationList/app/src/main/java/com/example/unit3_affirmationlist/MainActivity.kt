@@ -16,6 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.unit3_affirmationlist.ui.theme.Unit3_AffirmationListTheme
 
+
+/**
+ Documantasyona göre modifier'i üste paslamak good practice'dir.
+
+ Örneğin, Modifier.padding(10.dp).fillMaxSize() ifadesinde her Modifier, bir diğerinin üzerine eklenir.
+ Bu eklemeyi sağlayan then() fonksiyonudur.
+
+ Modifier'lar birleştirildiğinde arka planda CombinedModifier adında bir nesne oluşturulur. Bu, iki
+ farklı Modifier'ı tek bir zincir halinde birleştirir.
+
+ */
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
