@@ -1,4 +1,6 @@
-package com.example.unit3_affirmationlist
+package com.example.unit3_affirmationlist.data
+
+import com.example.unit3_affirmationlist.R
 
 class Datasource() {
     fun loadAffirmations(): List<Affirmation> {
@@ -12,6 +14,7 @@ class Datasource() {
             Affirmation(R.string.affirmation7, R.drawable.image1),
             Affirmation(R.string.affirmation8, R.drawable.image2),
             Affirmation(R.string.affirmation9, R.drawable.image3),
-            Affirmation(R.string.affirmation10, R.drawable.image1))
+            Affirmation(R.string.affirmation10, R.drawable.image1)
+        )
     }
 }
