@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Unit3_AffirmationListTheme {
-                TopicGridApp()
+                StickyHeaderExample()
             }
         }
     }
