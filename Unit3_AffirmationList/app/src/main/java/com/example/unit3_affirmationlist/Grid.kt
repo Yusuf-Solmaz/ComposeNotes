@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -112,6 +111,13 @@ fun StickyHeaderExample() {
         "Fruits" to listOf("Apple", "Banana", "Cherry"),
         "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
         "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
+        "Meat" to listOf("Beef", "Chicken", "Fish"),
+        "Seafood" to listOf("Fish", "Shrimp", "Crab"),
+        "Grains" to listOf("Rice", "Pasta", "Oats"),
+        "Sweets" to listOf("Cake", "Ice Cream", "Candy"),
+        "Beverages" to listOf("Water", "Juice", "Tea"),
+        "Snacks" to listOf("Chips", "Pretzels", "Popcorn"),
+        "Condiments" to listOf("Ketchup", "Mustard", "Mayonnaise")
     )
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
