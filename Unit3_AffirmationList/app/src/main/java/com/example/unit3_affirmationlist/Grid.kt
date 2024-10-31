@@ -112,28 +112,6 @@ fun StickyHeaderExample() {
         "Fruits" to listOf("Apple", "Banana", "Cherry"),
         "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
         "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt"),
-        "Fruits" to listOf("Apple", "Banana", "Cherry"),
-        "Vegetables" to listOf("Carrot", "Potato", "Broccoli"),
-        "Dairy" to listOf("Milk", "Cheese", "Yogurt")
-        
     )
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
