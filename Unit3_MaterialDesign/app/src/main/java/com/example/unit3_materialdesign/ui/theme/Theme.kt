@@ -1,6 +1,5 @@
 package com.example.unit3_materialdesign.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +9,11 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+
+
+/**
+ Theme.kt dosyası, uygulamanın temasına dair tüm bilgileri tutan dosyadır; bu tema renk, tipografi ve şekil ile tanımlanır.
+ */
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
