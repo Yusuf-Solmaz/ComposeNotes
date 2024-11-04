@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -39,21 +41,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.unit3_materialdesign.data.Dog
 import com.example.unit3_materialdesign.data.dogs
 import com.example.unit3_materialdesign.ui.theme.Unit3_MaterialDesignTheme
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Unit3_MaterialDesignTheme {
+            Unit3_MaterialDesignTheme() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -89,10 +96,13 @@ fun DogItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
     Card(
-        modifier = modifier
+        modifier = modifier,
+        shape = RoundedCornerShape(topStart = 15.dp, bottomEnd = 15.dp, topEnd = 50.dp, bottomStart = 50.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary // Koyu tema için kullanmak istediğiniz renk
+        )
     ) {
         Column(
-
             //Bu koddaki .animateContentSize() metodu, içerik boyutunda bir değişiklik olduğunda,
             // animasyonlu bir geçiş sağlamaya yarar
             modifier = Modifier
@@ -102,6 +112,7 @@ fun DogItem(
                         stiffness = Spring.StiffnessLow
                     )
                 )
+
         ) {
             Row(
                 modifier = Modifier
@@ -143,7 +154,7 @@ private fun DogItemButton(
         Icon(
             imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
             contentDescription = stringResource(R.string.expand_button_content_description),
-            tint = MaterialTheme.colorScheme.secondary
+            tint = Color.White
         )
     }
 }
@@ -183,7 +194,7 @@ fun DogIcon(
         modifier = modifier
             .size(dimensionResource(R.dimen.image_size))
             .padding(dimensionResource(R.dimen.padding_small))
-            .clip(MaterialTheme.shapes.small),
+            .clip(RoundedCornerShape(50.dp)),
         contentScale = ContentScale.Crop,
         painter = painterResource(dogIcon),
 
