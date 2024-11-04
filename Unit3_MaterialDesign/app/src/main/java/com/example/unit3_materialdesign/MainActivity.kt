@@ -53,7 +53,10 @@ import com.example.unit3_materialdesign.data.Dog
 import com.example.unit3_materialdesign.data.dogs
 import com.example.unit3_materialdesign.ui.theme.Unit3_MaterialDesignTheme
 
-
+/**
+ Modifier.clip ile bir bileşenin görüntüsünü veya kapsama alanını belirli bir şekille sınırlayabilirsiniz.
+ Örneğin: .clip(RoundedCornerShape(16.dp)) bir kartın köşelerini yuvarlamak için kullanılabilir.
+ */
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
