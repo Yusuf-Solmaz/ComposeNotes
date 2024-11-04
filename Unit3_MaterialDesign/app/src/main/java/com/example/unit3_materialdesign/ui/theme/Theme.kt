@@ -13,6 +13,12 @@ import androidx.compose.ui.platform.LocalContext
 
 /**
  Theme.kt dosyası, uygulamanın temasına dair tüm bilgileri tutan dosyadır; bu tema renk, tipografi ve şekil ile tanımlanır.
+
+ -------------------------
+
+ Uygulamanın base renklerini ayarlamak için :
+ https://material-foundation.github.io/material-theme-builder/
+ sitesinden yardım alınabilir.
  */
 
 private val DarkColorScheme = darkColorScheme(
