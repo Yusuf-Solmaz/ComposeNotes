@@ -56,6 +56,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unit3_materialdesign.data.Dog
 import com.example.unit3_materialdesign.data.dogs
+import com.example.unit3_materialdesign.practice_1.SuperHeroesApp
 import com.example.unit3_materialdesign.ui.theme.Unit3_MaterialDesignTheme
 
 /**
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    WoofApp()
+                    SuperHeroesApp()
                 }
             }
         }
