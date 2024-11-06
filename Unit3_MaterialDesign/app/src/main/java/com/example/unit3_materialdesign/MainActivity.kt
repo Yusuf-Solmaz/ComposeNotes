@@ -6,10 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -116,11 +118,18 @@ fun DogItem(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    // animate*AsState() fonksiyonları ile basit düzeyde animasyon gerçekleştirilebilir.
+    val color by animateColorAsState(
+        targetValue = if (expanded) MaterialTheme.colorScheme.tertiaryContainer
+        else MaterialTheme.colorScheme.primaryContainer, label = ""
+    )
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(topStart = 15.dp, bottomEnd = 15.dp, topEnd = 50.dp, bottomStart = 50.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary // Koyu tema için kullanmak istediğiniz renk
+            containerColor = color// Koyu tema için kullanmak istediğiniz renk
         )
     ) {
         Column(
@@ -132,7 +141,8 @@ fun DogItem(
                         dampingRatio = Spring.DampingRatioNoBouncy,
                         stiffness = Spring.StiffnessLow
                     )
-                )
+                ).background(color = color)
+
 
         ) {
             Row(
@@ -150,7 +160,10 @@ fun DogItem(
             }
             if (expanded) {
                 DogHobby(
-                    dog.hobbies, modifier = Modifier.padding(
+                    dog.hobbies, modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color)
+                        .padding(
                         start = dimensionResource(R.dimen.padding_medium),
                         top = dimensionResource(R.dimen.padding_small),
                         bottom = dimensionResource(R.dimen.padding_medium),
