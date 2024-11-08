@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -60,10 +61,14 @@ import com.example.unit4_navigationandapparchitecture.ui.theme.Unit4_NavigationA
  Bir Android uygulamasında birden fazla aktivite olabilir. Ancak, tek bir aktivite kullanılması önerilmektedir
  */
 
+private const val TAG = "MainActivity"
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate Called")
+
         setContent {
             Unit4_NavigationAndAppArchitectureTheme() {
                 Surface(
