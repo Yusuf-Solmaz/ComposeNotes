@@ -13,6 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.unit4_navigationandapparchitecture.ui.theme.Unit4_NavigationAndAppArchitectureTheme
 
+/**
+ Bir Android uygulamasında birden fazla aktivite olabilir. Ancak, tek bir aktivite kullanılması önerilmektedir
+ */
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
