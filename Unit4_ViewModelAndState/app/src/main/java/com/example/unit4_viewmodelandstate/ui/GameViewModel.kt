@@ -10,6 +10,14 @@ data class GameUiState(
     val currentScrambledWord: String = ""
 )
 
+/**
+ ViewModel, UI’nin tükettiği durumu tutar ve açığa çıkarır.
+ UI durumu, ViewModel tarafından dönüştürülen uygulama verileridir.
+ UI, kullanıcı olaylarını ViewModel’e bildirir.
+ ViewModel, kullanıcı eylemlerini işler ve durumu günceller.
+ Güncellenen durum, UI’ye geri beslenir ve UI bunu render eder.
+ */
+
 class GameViewModel : ViewModel() {
 
     private var _uiState = MutableStateFlow(GameUiState())
