@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -27,7 +28,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +42,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.unit4_viewmodelandstate.R
 import com.example.unit4_viewmodelandstate.ui.theme.Unit4_ViewModelAndStateTheme
 import androidx.compose.runtime.getValue
-
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 
 
 @Composable
@@ -67,6 +70,12 @@ fun GameScreen(
             style = typography.titleLarge,
         )
         GameLayout(
+            remainingCount = gameUiState.remainingCount,
+            wordCount = gameUiState.currentWordCount,
+            onUserGuessChanged = { gameViewmodel.updateUserGuess(it) },
+            userGuess = gameViewmodel.userGuess,
+            isGuessWrong = gameUiState.isGuessedWordWrong,
+            onKeyboardDone = { gameViewmodel.checkUserGuess() },
             currentScrambledWord = gameUiState.currentScrambledWord,
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,7 +92,9 @@ fun GameScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { }
+                onClick = {
+                    gameViewmodel.checkUserGuess()
+                }
             ) {
                 Text(
                     text = stringResource(R.string.submit),
@@ -92,7 +103,9 @@ fun GameScreen(
             }
 
             OutlinedButton(
-                onClick = { },
+                onClick = {
+                    gameViewmodel.skipWord()
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -102,7 +115,14 @@ fun GameScreen(
             }
         }
 
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
+    }
+
+    if (gameUiState.isGameOver) {
+        FinalScoreDialog(
+            score = gameUiState.score,
+            onPlayAgain = { gameViewmodel.resetGame() }
+        )
     }
 }
 
@@ -121,6 +141,12 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun GameLayout(
+    remainingCount:Int,
+    wordCount: Int,
+    onUserGuessChanged: (String) -> Unit,
+    isGuessWrong: Boolean,
+    userGuess: String,
+    onKeyboardDone: () -> Unit,
     currentScrambledWord: String,
     modifier: Modifier = Modifier) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -134,16 +160,17 @@ fun GameLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(mediumPadding)
         ) {
-            Text(
+            Row(
                 modifier = Modifier
-                    .clip(shapes.medium)
-                    .background(colorScheme.surfaceTint)
-                    .padding(horizontal = 10.dp, vertical = 4.dp)
-                    .align(alignment = Alignment.End),
-                text = stringResource(R.string.word_count, 0),
-                style = typography.titleMedium,
-                color = colorScheme.onPrimary
-            )
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomInfoText(modifier = Modifier.background(colorScheme.onError),wordCount = remainingCount)
+
+                CustomInfoText(modifier = Modifier.background(colorScheme.onSurface),wordCount = wordCount,isRemainingWord = true)
+            }
             Text(
                 text = currentScrambledWord,
                 style = typography.displayMedium
@@ -154,7 +181,7 @@ fun GameLayout(
                 style = typography.titleMedium
             )
             OutlinedTextField(
-                value = "",
+                value = userGuess,
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
@@ -163,18 +190,40 @@ fun GameLayout(
                     unfocusedContainerColor = colorScheme.surface,
                     disabledContainerColor = colorScheme.surface,
                 ),
-                onValueChange = { },
-                label = { Text(stringResource(R.string.enter_your_word)) },
-                isError = false,
+                onValueChange = {onUserGuessChanged(it) },
+                label = {
+                    if (isGuessWrong) {
+                        Text(stringResource(R.string.wrong_guess))
+                    } else {
+                        Text(stringResource(R.string.enter_your_word))
+                    }
+                },
+                isError = isGuessWrong,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { }
+                    onDone = {onKeyboardDone() }
                 )
             )
         }
     }
+}
+
+@Composable
+fun CustomInfoText(
+    modifier: Modifier = Modifier,
+    wordCount: Int,
+    isRemainingWord: Boolean = false
+){
+    Text(
+        modifier = modifier
+            .clip(shapes.medium)
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+        text = if(isRemainingWord) stringResource(R.string.word_count, wordCount) else "$wordCount",
+        style = typography.titleMedium,
+        color = colorScheme.onPrimary
+    )
 }
 
 
@@ -185,29 +234,34 @@ private fun FinalScoreDialog(
     modifier: Modifier = Modifier
 ) {
     val activity = (LocalContext.current as Activity)
+    var dialogState by rememberSaveable { mutableStateOf(true) }
 
-    AlertDialog(
-        onDismissRequest = {
-        // Kullanıcı, diyalogun dışına veya geri tuşuna tıkladığında diyalogu kapatır.
-        },
-        title = { Text(text = stringResource(R.string.congratulations)) },
-        text = { Text(text = stringResource(R.string.you_scored, score)) },
-        modifier = modifier,
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    activity.finish()
+    if (dialogState) {
+        AlertDialog(
+            onDismissRequest = {
+                // Kullanıcı, diyalogun dışına veya geri tuşuna tıkladığında diyalogu kapatır.
+                dialogState = false
+            },
+
+            title = { Text(text = stringResource(R.string.congratulations)) },
+            text = { Text(text = stringResource(R.string.you_scored, score)) },
+            modifier = modifier,
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        activity.finish()
+                    }
+                ) {
+                    Text(text = stringResource(R.string.exit))
                 }
-            ) {
-                Text(text = stringResource(R.string.exit))
+            },
+            confirmButton = {
+                TextButton(onClick = onPlayAgain) {
+                    Text(text = stringResource(R.string.play_again))
+                }
             }
-        },
-        confirmButton = {
-            TextButton(onClick = onPlayAgain) {
-                Text(text = stringResource(R.string.play_again))
-            }
-        }
-    )
+        )
+    }
 }
 
 @Preview(showBackground = true)
