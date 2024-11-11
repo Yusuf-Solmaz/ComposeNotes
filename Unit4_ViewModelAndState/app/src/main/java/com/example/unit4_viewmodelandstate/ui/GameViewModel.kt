@@ -53,7 +53,6 @@ class GameViewModel : ViewModel() {
     private fun pickRandomWordAndShuffle(): String {
         // Tüm kelimeler listesinden rastgele bir kelime seçilir
         currentWord = allWords.random()
-        Log.d("GameFragment", "currentWord is $currentWord")
 
         // Eğer seçilen kelime daha önce kullanıldıysa, yeniden rastgele kelime seçmeye çalışır
         if (usedWords.contains(currentWord)) {
@@ -114,7 +113,6 @@ class GameViewModel : ViewModel() {
     private fun updateGameState(updatedScore: Int) {
         if (usedWords.size == MAX_NO_OF_WORDS){
             //Last round in the game, update isGameOver to true, don't pick a new word
-            Log.d("GameFragment", "remainingCount: ${_uiState.value.remainingCount},isGameOver: ${_uiState.value.isGameOver}")
             _uiState.update { currentState ->
                 currentState.copy(
                     isGuessedWordWrong = false,
