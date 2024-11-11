@@ -1,5 +1,6 @@
 package com.example.unit4_viewmodelandstate.data
 
+const val DEFAULT_REMAINING_COUNT = 3
 const val MAX_NO_OF_WORDS = 10
 const val SCORE_INCREASE = 20
 
