@@ -17,6 +17,11 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+
+/**
+Bir test metodunun çalıştırılmasından önce belirli bir metodun çalıştırılmasını sağlar. Yani, @Before
+ile işaretlenen metod, her bir test metodundan önce otomatik olarak çalışır.
+ */
 class CupcakeScreenNavigationTest {
 
     @get:Rule
