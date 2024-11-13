@@ -35,6 +35,12 @@ NavHost: NavGraph'ın geçerli ekranını göstermek için kapsayıcı olarak i�
 /**
  Ekranlar arası geçişte best practice navController'ı screen'de argüman olarak vermek yerine, screende higher order ile
  fonksiyonu alıp NavHost içinde navController işlemlerini yapmak daha doğru olacaktır.
+
+ ------------------------
+ Intent Nedir?
+
+ Intent, sistemin bir eylem gerçekleştirmesini istemek için kullanılan bir istektir ve genellikle yeni
+ bir aktivite sunulmasını sağlar.
  */
 
 @Composable
