@@ -1,5 +1,7 @@
 package com.example.unit4_navigation.ui.presentation.navigation
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -73,6 +75,7 @@ fun CupcakeNavigation(
         }
         composable(route = CupcakeDestination.FLAVOR.name) {
             val context = LocalContext.current
+
             SelectOptionScreen(
                 subtotal = cupcakeUiState.price,
                 onNextButtonClicked = { navController.navigate(CupcakeDestination.PICKUP.name) },
@@ -99,13 +102,16 @@ fun CupcakeNavigation(
             title(stringResource(CupcakeDestination.PICKUP.title))
         }
         composable(route = CupcakeDestination.SUMMARY.name) {
+
+            val context = LocalContext.current
+
             OrderSummaryScreen(
                 orderUiState = cupcakeUiState,
                 onCancelButtonClicked = {
                     cancelOrderAndNavigateToStart(viewModel, navController)
                 },
                 onSendButtonClicked = { subject: String, summary: String ->
-
+                    shareOrder(context= context, subject = subject, summary = summary)
                 },
                 modifier = Modifier.fillMaxHeight()
             )
@@ -120,5 +126,19 @@ private fun cancelOrderAndNavigateToStart(
 ) {
     viewModel.resetOrder()
     navController.popBackStack(CupcakeDestination.START.name, inclusive = false)
+}
+
+private fun shareOrder(context: Context, subject: String, summary: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, summary)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.getString(R.string.new_cupcake_order)
+        )
+    )
 }
 
