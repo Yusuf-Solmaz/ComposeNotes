@@ -1,6 +1,9 @@
 package com.example.unit4_navigation.ui.presentation.order.viewmodel
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.unit4_navigation.data.DataSource
 import com.example.unit4_navigation.ui.presentation.order.state.OrderUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,11 +48,21 @@ class OrderViewModel : ViewModel() {
      * Set the [desiredFlavor] of cupcakes for this order's state.
      * Only 1 flavor can be selected for the whole order.
      */
-    fun setFlavor(desiredFlavor: String) {
+    fun setFlavor(context: Context, desiredFlavor: String) {
+        val selectedFlavor = DataSource.flavors.find {
+            // Retrieve the actual string from resources to compare
+            it.first.let { resId -> context.getString(resId) } == desiredFlavor
+        }
+        val flavorPrice = selectedFlavor?.second ?: 0.0
         _uiState.update { currentState ->
-            currentState.copy(flavor = desiredFlavor)
+            currentState.copy(
+                flavor = desiredFlavor,
+                selectedFlavorPrice = flavorPrice,
+                price = calculatePrice(flavorPrice = flavorPrice)
+            )
         }
     }
+
 
     /**
      * Set the [pickupDate] for this order's state and update the price
@@ -58,7 +71,7 @@ class OrderViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 date = pickupDate,
-                price = calculatePrice(pickupDate = pickupDate)
+                price = calculatePrice(pickupDate = pickupDate, flavorPrice = currentState.selectedFlavorPrice)
             )
         }
     }
@@ -75,15 +88,16 @@ class OrderViewModel : ViewModel() {
      */
     private fun calculatePrice(
         quantity: Int = _uiState.value.quantity,
-        pickupDate: String = _uiState.value.date
+        pickupDate: String = _uiState.value.date,
+        flavorPrice: Double = 0.0
     ): String {
-        var calculatedPrice = quantity * PRICE_PER_CUPCAKE
-        // If the user selected the first option (today) for pickup, add the surcharge
+
+        Log.d("OrderViewModel", "calculatePrice: $quantity, $pickupDate, $flavorPrice")
+        var calculatedPrice = (quantity * PRICE_PER_CUPCAKE) + flavorPrice
         if (pickupOptions()[0] == pickupDate) {
             calculatedPrice += PRICE_FOR_SAME_DAY_PICKUP
         }
-        val formattedPrice = NumberFormat.getCurrencyInstance().format(calculatedPrice)
-        return formattedPrice
+        return NumberFormat.getCurrencyInstance().format(calculatedPrice)
     }
 
     /**

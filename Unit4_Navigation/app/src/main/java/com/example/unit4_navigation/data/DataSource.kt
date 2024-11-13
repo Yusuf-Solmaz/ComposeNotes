@@ -3,11 +3,11 @@ import com.example.unit4_navigation.R
 
 object DataSource {
     val flavors = listOf(
-        R.string.vanilla,
-        R.string.chocolate,
-        R.string.red_velvet,
-        R.string.salted_caramel,
-        R.string.coffee
+        Pair(R.string.vanilla, 2.00),
+        Pair(R.string.chocolate, 2.50),
+        Pair(R.string.red_velvet, 3.00),
+        Pair(R.string.salted_caramel, 2.75),
+        Pair(R.string.coffee, 3.25)
     )
 
     val quantityOptions = listOf(

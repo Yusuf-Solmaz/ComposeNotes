@@ -80,8 +80,10 @@ fun CupcakeNavigation(
                 onCancelButtonClicked = {
                     cancelOrderAndNavigateToStart(viewModel, navController)
                 },
-                options = DataSource.flavors.map { id -> context.resources.getString(id) },
-                onSelectionChanged = { viewModel.setFlavor(it) },
+                options = DataSource.flavors.map { context.resources.getString(it.first) },
+                onSelectionChanged = { selectedFlavor ->
+                    viewModel.setFlavor(context,selectedFlavor)
+                },
                 modifier = Modifier.fillMaxHeight()
             )
         }
