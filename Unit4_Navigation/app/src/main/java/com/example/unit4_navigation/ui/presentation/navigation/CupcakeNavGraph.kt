@@ -50,8 +50,7 @@ fun CupcakeNavigation(
     navController: NavHostController,
     cupcakeUiState: OrderUiState,
     viewModel: OrderViewModel = viewModel(),
-    modifier: Modifier = Modifier,
-    title: (String) -> Unit
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -71,7 +70,6 @@ fun CupcakeNavigation(
                     .fillMaxSize()
                     .padding(dimensionResource(R.dimen.padding_medium))
             )
-            title(stringResource(CupcakeDestination.START.title))
         }
         composable(route = CupcakeDestination.FLAVOR.name) {
             val context = LocalContext.current
@@ -86,7 +84,6 @@ fun CupcakeNavigation(
                 onSelectionChanged = { viewModel.setFlavor(it) },
                 modifier = Modifier.fillMaxHeight()
             )
-            title(stringResource(CupcakeDestination.FLAVOR.title))
         }
         composable(route = CupcakeDestination.PICKUP.name) {
             SelectOptionScreen(
@@ -99,7 +96,6 @@ fun CupcakeNavigation(
                 onSelectionChanged = { viewModel.setDate(it) },
                 modifier = Modifier.fillMaxHeight()
             )
-            title(stringResource(CupcakeDestination.PICKUP.title))
         }
         composable(route = CupcakeDestination.SUMMARY.name) {
 
@@ -115,7 +111,6 @@ fun CupcakeNavigation(
                 },
                 modifier = Modifier.fillMaxHeight()
             )
-            title(stringResource(CupcakeDestination.SUMMARY.title))
         }
     }
 }
