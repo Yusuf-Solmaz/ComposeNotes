@@ -1,5 +1,6 @@
 package com.example.unit4_navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,7 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.unit4_navigation.ui.presentation.navigation.CupcakeDestination
 import com.example.unit4_navigation.ui.presentation.navigation.CupcakeNavigation
 import com.example.unit4_navigation.ui.presentation.order.viewmodel.OrderViewModel
 
@@ -34,11 +37,11 @@ import com.example.unit4_navigation.ui.presentation.order.viewmodel.OrderViewMod
 fun CupcakeAppBar(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    title: String,
+    currentScreen: CupcakeDestination,
     modifier: Modifier = Modifier
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(title) },
+        title = { Text(stringResource(currentScreen.title)) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
@@ -60,19 +63,22 @@ fun CupcakeAppBar(
 @Composable
 fun CupcakeApp(
     viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
 
-    var title by rememberSaveable {
-        mutableStateOf("")
-    }
+    // Get current back stack entry
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    // Get the name of the current screen
+    val currentScreen = CupcakeDestination.valueOf(
+        backStackEntry?.destination?.route ?: CupcakeDestination.START.name
+    )
 
     Scaffold(
         topBar = {
             CupcakeAppBar(
-                canNavigateBack = true,
-                navigateUp = { /* TODO: implement back navigation */ },
-                title = title
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                currentScreen = currentScreen,
             )
         }
     ) { innerPadding ->
@@ -82,10 +88,7 @@ fun CupcakeApp(
         CupcakeNavigation(
             navController = navController,
             cupcakeUiState = uiState,
-            modifier = Modifier.padding(innerPadding),
-            title={
-                title = it
-            }
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }
