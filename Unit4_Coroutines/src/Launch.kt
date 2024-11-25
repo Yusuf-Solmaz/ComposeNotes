@@ -1,13 +1,10 @@
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 /*
  Yazılan kodların synchronous yani eşzamanlı çalışma eğilimindedir. Bir kod bloğu çalışmadan altındaki çalışmaz.
  Fakat coroutine ile asynchronous kod yazılabilir.
 
- launch(): Bir işlemi asynch çalışmasını sağlar.
+ launch(): Bir işlemi asynch çalışmasını sağlar. Bir Job döndürür.
  async(): Bir işlemi arka planda başlatır ve bir sonuç döndüreceğini taahhüt eder. ir Deferred nesnesidir. Bu nesne,
  işlemin sonucunu hazır olduğunda sağlar.
  await(): Bir Deferred nesnesinin sonucuna ulaşmak için kullanılır. Eğer işlem henüz tamamlanmadıysa, await() çağrısı o
