@@ -15,11 +15,18 @@ fun main() {
         println(getWeatherReport())
         println("Have a good day!")
     }
+
 }
 
 suspend fun getWeatherReport() = coroutineScope {
+
+
     val forecast = async { getForecast1() }
     val temperature = async { getTemperature1() }
+
+    //temperature.cancel()
+    //coroutine iptal edilebilir
+
 
     return@coroutineScope "${forecast.await()} ${temperature.await()}"
 }
