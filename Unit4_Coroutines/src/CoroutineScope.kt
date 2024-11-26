@@ -42,6 +42,19 @@ import kotlin.coroutines.CoroutineContext
     ...
  }
 
+ Main Thread: Uygulamanız başlangıçta tek bir ana thread ile çalışır, ancak ek işler yapmak için birden fazla thread oluşturabilirsiniz.
+ Bu ek thread’lere worker thread denir. Uzun süre çalışan bir görev, bir worker thread’i uzun süre bloklasa bile sorun yoktur, çünkü bu
+ sırada ana thread engellenmez ve kullanıcıya aktif olarak yanıt verebilir.
+
+ Dispatchers.Main: Koroutin’i Android’in ana thread’inde çalıştırmak için bu dispatcher kullanılır. Genellikle UI güncellemeleri ve
+ etkileşimleri işlemek veya hızlı işler yapmak için kullanılır.
+
+ Dispatchers.IO: Bu dispatcher, ana thread dışında disk veya ağ I/O (girdi/çıktı) işlemlerini optimize etmek için tasarlanmıştır.
+ Örneğin, dosya okumak veya yazmak, ağ işlemleri gerçekleştirmek için kullanılır.
+
+ Dispatchers.Default: Eğer launch() veya async() çağrıldığında bağlamlarında bir dispatcher belirtilmemişse, bu dispatcher varsayılan
+ olarak kullanılır. Ana thread dışında hesaplama yoğunluklu işleri gerçekleştirmek için uygundur. Örneğin, bitmap bir görüntü dosyasını
+ işlemek için kullanılır.
 
 */
 
