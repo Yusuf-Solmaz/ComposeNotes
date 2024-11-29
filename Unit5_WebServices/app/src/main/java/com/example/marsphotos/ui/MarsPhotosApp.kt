@@ -28,13 +28,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marsphotos.R
 import com.example.marsphotos.ui.screens.HomeScreen
-import com.example.marsphotos.ui.screens.MarsViewModel
+import com.example.marsphotos.ui.screens.viewmodel.MarsViewModel
 
 @Composable
 fun MarsPhotosApp() {
@@ -46,10 +48,11 @@ fun MarsPhotosApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val marsViewModel: MarsViewModel = viewModel()
+            val marsViewModel: MarsViewModel = viewModel(factory = MarsViewModel.Factory)
+            val state by marsViewModel.marsUiState.collectAsState()
             HomeScreen(
-                marsUiState = marsViewModel.marsUiState,
-                contentPadding = it,
+                marsUiState = state,
+                contentPadding = it
             )
         }
     }
