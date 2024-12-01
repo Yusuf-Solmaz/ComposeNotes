@@ -39,7 +39,7 @@ class MarsViewModelTest {
             val currentState = marsViewModel.marsUiState.value
 
             assertEquals(
-                MarsUIState.Success("Success: ${FakeDataSource.photosList.size} Mars photos retrieved"),
+                MarsUIState.Success(FakeDataSource.photosList),
                 currentState
             )
         }
