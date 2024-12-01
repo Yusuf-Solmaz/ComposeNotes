@@ -52,7 +52,8 @@ fun MarsPhotosApp() {
             val state by marsViewModel.marsUiState.collectAsState()
             HomeScreen(
                 marsUiState = state,
-                contentPadding = it
+                contentPadding = it,
+                retryAction = marsViewModel::getMarsPhotos
             )
         }
     }
