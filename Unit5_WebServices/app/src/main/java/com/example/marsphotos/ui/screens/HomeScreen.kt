@@ -24,14 +24,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -50,6 +53,8 @@ import com.example.marsphotos.ui.theme.MarsPhotosTheme
 @Composable
 fun HomeScreen(
     marsUiState: MarsUIState,
+    loadMore: () -> Unit,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     retryAction :() -> Unit
@@ -60,7 +65,7 @@ fun HomeScreen(
         }
         is MarsUIState.Success -> {
             ResultScreen(
-                marsUiState.photos, modifier = modifier.padding(contentPadding)
+                marsUiState.photos, isLoading = isLoading,loadMore=loadMore,modifier = modifier.padding(contentPadding)
             )
         }
         is MarsUIState.Error -> {
@@ -73,16 +78,18 @@ fun HomeScreen(
  * ResultScreen displaying number of photos retrieved.
  */
 @Composable
-fun ResultScreen(photos: List<MarsPhoto>, modifier: Modifier = Modifier) {
+fun ResultScreen(photos: List<MarsPhoto>,  isLoading: Boolean, loadMore: () -> Unit,modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.fillMaxSize()) {
-        MarsPhotoGrid(photos)
+        MarsPhotoGrid(photos,isLoading,loadMore)
     }
 }
 
 @Composable
 fun MarsPhotoGrid(
     photos: List<MarsPhoto>,
+    isLoading: Boolean,
+    loadMore: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)){
 
@@ -97,13 +104,32 @@ fun MarsPhotoGrid(
         columns = GridCells.Adaptive(150.dp),
         modifier = modifier.padding(horizontal = 4.dp),
         contentPadding = contentPadding) {
-        items(items = photos, key = {photo -> photo.id}) {
-                photo ->
+        items(items = photos, key = { photo -> photo.id }) { photo ->
 
-            MarsImage(photo,modifier = modifier
-                .padding(4.dp)
-                .fillMaxWidth()
-                .aspectRatio(1.5f))
+            MarsImage(
+                photo, modifier = modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(1.5f)
+            )
+        }
+
+        // Listenin sonuna ulaşıldığında daha fazla veri yükle
+        item {
+            if (isLoading) {
+                // Loading göstergesi
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                )
+            } else {
+                // Scroll sonuna ulaşınca yeni veri yükle
+                LaunchedEffect(Unit) {
+                    loadMore()
+                }
+            }
         }
     }
 }
@@ -160,7 +186,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ResultScreenPreview() {
     MarsPhotosTheme {
-        val mockData = List(10) { MarsPhoto("$it", "") }
-        MarsPhotoGrid(mockData)
+
     }
 }

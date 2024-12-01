@@ -50,10 +50,13 @@ fun MarsPhotosApp() {
         ) {
             val marsViewModel: MarsViewModel = viewModel(factory = MarsViewModel.Factory)
             val state by marsViewModel.marsUiState.collectAsState()
+            val isLoading by marsViewModel.isLoading.collectAsState()
             HomeScreen(
                 marsUiState = state,
                 contentPadding = it,
-                retryAction = marsViewModel::getMarsPhotos
+                retryAction = marsViewModel::getAllPhotos,
+                loadMore = marsViewModel::loadNextPage,
+                isLoading= isLoading,
             )
         }
     }

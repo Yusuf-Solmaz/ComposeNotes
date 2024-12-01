@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.marsphotos.MarsPhotosApplication
+import com.example.marsphotos.data.network.mars_photos.model.MarsPhoto
 import com.example.marsphotos.data.network.mars_photos.repository.MarsPhotosRepository
 import com.example.marsphotos.ui.screens.state.MarsUIState
 import kotlinx.coroutines.Dispatchers
@@ -40,15 +41,6 @@ ViewModelScope, ViewModel'e ait olduğundan, uygulama bir yapılandırma değiş
 
 class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel() {
 
-    private val _marsUiState = MutableStateFlow<MarsUIState>(MarsUIState.Loading)
-    val marsUiState: StateFlow<MarsUIState>
-        get() = _marsUiState
-
-
-    init {
-        getMarsPhotos()
-    }
-
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -59,17 +51,54 @@ class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel() {
         }
     }
 
-    fun getMarsPhotos() {
-        viewModelScope.launch(Dispatchers.IO){
+    private val _marsUiState = MutableStateFlow<MarsUIState>(MarsUIState.Loading)
+    val marsUiState: StateFlow<MarsUIState> get() = _marsUiState
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
+
+    private val allPhotos = mutableListOf<MarsPhoto>() // Bütün yüklenen veriler
+    private var currentPage = 1
+    private val pageSize = 20 // Bir sayfadaki öğe sayısı
+
+    init {
+        getAllPhotos()
+    }
+
+    fun getAllPhotos() {
+        viewModelScope.launch(Dispatchers.IO) {
             _marsUiState.value = MarsUIState.Loading
             try {
-                val result = photoRepo.getPhotos()
-                _marsUiState.value = MarsUIState.Success(result)
+                val result = photoRepo.getPhotos() // Tüm veriyi tek seferde alıyoruz
+                allPhotos.addAll(result)
+                loadPage(1) // İlk sayfayı yükle
+            } catch (e: Exception) {
+                _marsUiState.value = MarsUIState.Error(e.message ?: "An error occurred")
             }
-            catch (e: Exception){
-                _marsUiState.value = MarsUIState.Error(e.message!!)
-            }
+        }
+    }
 
+    fun loadPage(page: Int) {
+        viewModelScope.launch {
+            if (page > 0 && (page - 1) * pageSize < allPhotos.size) {
+                _isLoading.value = true // Yükleniyor durumunu başlat
+                val start = (page - 1) * pageSize
+                val end = minOf(start + pageSize, allPhotos.size)
+                val newPhotos = allPhotos.subList(start, end)
+
+                // Yeni verileri önceki listeye ekle
+                val currentPhotos = (marsUiState.value as? MarsUIState.Success)?.photos ?: emptyList()
+                _marsUiState.value = MarsUIState.Success(currentPhotos + newPhotos)
+
+                currentPage = page
+                _isLoading.value = false // Yükleniyor durumunu kapat
+            }
+        }
+    }
+
+    fun loadNextPage() {
+        if (!_isLoading.value) { // Hali hazırda yükleniyorsa yeni bir yükleme başlatma
+            loadPage(currentPage + 1)
         }
     }
 }
