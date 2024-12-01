@@ -59,12 +59,12 @@ class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel() {
         }
     }
 
-    private fun getMarsPhotos() {
+    fun getMarsPhotos() {
         viewModelScope.launch(Dispatchers.IO){
             _marsUiState.value = MarsUIState.Loading
             try {
                 val result = photoRepo.getPhotos()
-                _marsUiState.value = MarsUIState.Success("Success: ${result.size} Mars photos retrieved")
+                _marsUiState.value = MarsUIState.Success(result)
             }
             catch (e: Exception){
                 _marsUiState.value = MarsUIState.Error(e.message!!)
