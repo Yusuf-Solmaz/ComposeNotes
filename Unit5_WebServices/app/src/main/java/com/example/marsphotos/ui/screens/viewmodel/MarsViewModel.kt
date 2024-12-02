@@ -15,6 +15,7 @@
  */
 package com.example.marsphotos.ui.screens.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -24,10 +25,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.marsphotos.MarsPhotosApplication
 import com.example.marsphotos.data.network.mars_photos.model.MarsPhoto
 import com.example.marsphotos.data.network.mars_photos.repository.MarsPhotosRepository
+import com.example.marsphotos.data.network.mars_photos.result.Result
 import com.example.marsphotos.ui.screens.state.MarsUIState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /*
@@ -39,7 +44,7 @@ Web servisi isteğini arka planda yapmak ve coroutine başlatmak için viewModel
 ViewModelScope, ViewModel'e ait olduğundan, uygulama bir yapılandırma değişikliğinden geçse bile istek devam eder.
 */
 
-class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel() {
+class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel(){
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
@@ -61,21 +66,39 @@ class MarsViewModel (val photoRepo: MarsPhotosRepository): ViewModel() {
     private var currentPage = 1
     private val pageSize = 20 // Bir sayfadaki öğe sayısı
 
-    init {
-        getAllPhotos()
-    }
+
+
+   init {
+       getAllPhotos()
+   }
+
 
     fun getAllPhotos() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _marsUiState.value = MarsUIState.Loading
-            try {
-                val result = photoRepo.getPhotos() // Tüm veriyi tek seferde alıyoruz
-                allPhotos.addAll(result)
-                loadPage(1) // İlk sayfayı yükle
-            } catch (e: Exception) {
-                _marsUiState.value = MarsUIState.Error(e.message ?: "An error occurred")
-            }
-        }
+        // photoRepo.getPhotos()'u stateIn ile almak
+        val photosFlow = photoRepo.getPhotos()
+            .stateIn(
+                scope = viewModelScope, // ViewModel scope içinde çalışacak
+                started = WhileSubscribed(5000), // 5 saniye süreyle abonelik aktif
+                initialValue = Result.Loading // Başlangıç değeri
+            )
+
+            photosFlow
+                .onEach{ result ->
+                when (result) {
+                    is Result.Loading -> {
+                        _marsUiState.value = MarsUIState.Loading
+                    }
+                    is Result.Success -> {
+                        allPhotos.addAll(result.data ?: emptyList())
+                        loadPage(1)
+                    }
+                    is Result.Error -> {
+                        _marsUiState.value = MarsUIState.Error(result.message)
+                    }
+                }
+            }.launchIn(viewModelScope)
+
+        Log.i("GetAll","GetAll Worked")
     }
 
     fun loadPage(page: Int) {

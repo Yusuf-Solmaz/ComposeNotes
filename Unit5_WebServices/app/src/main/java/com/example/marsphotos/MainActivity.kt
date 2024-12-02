@@ -24,12 +24,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.marsphotos.ui.MarsPhotosApp
+import com.example.marsphotos.ui.screens.viewmodel.MarsViewModel
 import com.example.marsphotos.ui.theme.MarsPhotosTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var marsViewModel: MarsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
         setContent {
             MarsPhotosTheme {
                 Surface(
