@@ -16,8 +16,10 @@
 package com.example.dessertrelease.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -75,6 +77,12 @@ private fun DessertReleaseScreen(
     selectLayout: (Boolean) -> Unit
 ) {
     val isLinearLayout = uiState.isLinearLayout
+    val isLoading = uiState.isLoading
+    if (isLoading){
+        Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Loading..")
+        }
+    }else{
     Scaffold(
         topBar = {
             TopAppBar(
@@ -117,7 +125,7 @@ private fun DessertReleaseScreen(
         }
     }
 }
-
+}
 @Composable
 fun DessertReleaseLinearLayout(
     modifier: Modifier = Modifier,
