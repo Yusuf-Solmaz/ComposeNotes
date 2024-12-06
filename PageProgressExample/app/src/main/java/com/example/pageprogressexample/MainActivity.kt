@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -140,7 +142,19 @@ fun ProgressIndicatorAppWithEnums(innerPaddingValues: PaddingValues, viewModel: 
             }
 
             // Son Sayfa
-            composable("finalPage") {
+            composable(
+                "finalPage",
+                enterTransition = {
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> fullHeight } // Ekranın altından yukarıya kaydırma
+                    )
+                },
+                exitTransition = {
+                    slideOutVertically(
+                        targetOffsetY = { fullHeight -> fullHeight } // Sayfa çıkarken yukarıya kayar
+                    )
+                }
+            )  {
                 FinalPage(
                     viewModel = viewModel
                 )
