@@ -1,0 +1,44 @@
+Projede NavigationDestination adında bir interface oluşturulmuştur. Uygulamanın ekranlarında bu interfaceyi implent eden
+bir object ile override edilerek gerekli bilgiler dolduruldu. Örneğin Home Screen:
+
+object HomeDestination : NavigationDestination {
+    override val route = "home"
+    override val titleRes = R.string.app_name
+}
+
+Bazı ekranlarda veriler gönderildi (örneğin item id'si). Bu gönderim Navigation aracılığı ile olup daha sonradan viewmodelde
+SavedStateHandle aracılığı ile alınıp işlendi. Örnek kod:
+
+object ItemDetailsDestination : NavigationDestination {
+    override val route = "item_details"
+    override val titleRes = R.string.item_detail_title
+    const val itemIdArg = "itemId"
+    val routeWithArgs = "$route/{$itemIdArg}"
+}
+-----
+composable(route = HomeDestination.route) {
+            HomeScreen(
+                navigateToItemEntry = { navController.navigate(ItemEntryDestination.route) },
+                navigateToItemUpdate = {
+                    navController.navigate("${ItemDetailsDestination.route}/${it}")
+                }
+            )
+        }
+
+Burada HomeScreen'den İtem detail'e geçerken id paslanıyor.
+
+-------
+class ItemDetailsViewModel(
+    savedStateHandle: SavedStateHandle,
+    private val itemsRepository: ItemsRepository,
+) : ViewModel() {
+
+    private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.itemIdArg])
+
+Burada ise gönderilen id alınıyor.
+
+----------------------------------------------------------------------------------------------------
+İtem save edilirken save kısmı şu şekilde oluyor:
+
+edit texte girilen inputlar viewmodeldeki uiState.itemDetail'i copy fonksiyonu ile updateliyor. En son butona (save)
+basıldığında viewmodeldeki uiState.itemDetail kullanılıyor.
