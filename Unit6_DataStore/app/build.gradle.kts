@@ -16,8 +16,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-ksp")
 }
 
 android {
@@ -67,7 +67,6 @@ android {
 }
 
 dependencies {
-
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.material3:material3")
@@ -84,8 +83,6 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
-}
-kapt {
-    correctErrorTypes = true
+    ksp("com.google.dagger:hilt-compiler:2.51.1") // Kapt yerine KSP kullanıyoruz
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }

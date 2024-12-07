@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.dessertrelease.ui
+package com.example.datastoreexample.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,16 +33,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.dessertrelease.R
-import com.example.dessertrelease.data.local.LocalDessertReleaseData
-import com.example.dessertrelease.ui.theme.DessertReleaseTheme
+import com.example.datastoreexample.R
+import com.example.datastoreexample.data.local.LocalDessertReleaseData
 
-/*
- * Screen level composable
- */
 @Composable
 fun DessertReleaseApp(
     dessertReleaseViewModel: DessertReleaseViewModel = hiltViewModel()
@@ -81,48 +61,48 @@ private fun DessertReleaseScreen(
             Text("Loading..")
         }
     }else{
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.top_bar_name)) },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            selectLayout(!isLinearLayout)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.top_bar_name)) },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                selectLayout(!isLinearLayout)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(uiState.toggleIcon),
+                                contentDescription = stringResource(uiState.toggleContentDescription),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
                         }
-                    ) {
-                        Icon(
-                            painter = painterResource(uiState.toggleIcon),
-                            contentDescription = stringResource(uiState.toggleContentDescription),
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.inversePrimary
+                    },
+                    colors = TopAppBarDefaults.largeTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary
+                    )
                 )
-            )
-        }
-    ) { innerPadding ->
-        val modifier = Modifier
-            .padding(
-                top = dimensionResource(R.dimen.padding_medium),
-                start = dimensionResource(R.dimen.padding_medium),
-                end = dimensionResource(R.dimen.padding_medium),
-            )
-        if (isLinearLayout) {
-            DessertReleaseLinearLayout(
-                modifier = modifier.fillMaxWidth(),
-                contentPadding = innerPadding
-            )
-        } else {
-            DessertReleaseGridLayout(
-                modifier = modifier,
-                contentPadding = innerPadding,
-            )
+            }
+        ) { innerPadding ->
+            val modifier = Modifier
+                .padding(
+                    top = dimensionResource(R.dimen.padding_medium),
+                    start = dimensionResource(R.dimen.padding_medium),
+                    end = dimensionResource(R.dimen.padding_medium),
+                )
+            if (isLinearLayout) {
+                DessertReleaseLinearLayout(
+                    modifier = modifier.fillMaxWidth(),
+                    contentPadding = innerPadding
+                )
+            } else {
+                DessertReleaseGridLayout(
+                    modifier = modifier,
+                    contentPadding = innerPadding,
+                )
+            }
         }
     }
-}
 }
 @Composable
 fun DessertReleaseLinearLayout(
@@ -160,7 +140,7 @@ fun DessertReleaseLinearLayout(
 fun DessertReleaseGridLayout(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
-    ) {
+) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Adaptive(150.dp),
@@ -192,32 +172,5 @@ fun DessertReleaseGridLayout(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DessertReleaseLinearLayoutPreview() {
-    DessertReleaseTheme {
-        DessertReleaseLinearLayout()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DessertReleaseGridLayoutPreview() {
-    DessertReleaseTheme {
-        DessertReleaseGridLayout()
-    }
-}
-
-@Preview
-@Composable
-fun DessertReleaseAppPreview() {
-    DessertReleaseTheme {
-        DessertReleaseScreen(
-            uiState = DessertReleaseUiState(),
-            selectLayout = {}
-        )
     }
 }
