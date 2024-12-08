@@ -1,14 +1,40 @@
 WorkManager Nedir?
 
-WorkManager, Android Jetpack'in bir parçası olan ve arka plan işlemleri için kullanılan bir Mimari Bileşen'dir.
+ WorkManager, Android Jetpack'in bir parçası olan ve arka plan işlemleri için kullanılan bir Mimari Bileşen'dir.
 
-Opportunistic execution, WorkManager'ın arka plan işlemini mümkün olan en kısa sürede gerçekleştirmesi anlamına gelir.
-Guaranteed execution, WorkManager'ın işleminizi çeşitli durumlarda başlatma mantığını üstlenmesi anlamına gelir; hatta uygulamanızdan çıkmış olsanız bile.
+ Opportunistic execution, WorkManager'ın arka plan işlemini mümkün olan en kısa sürede gerçekleştirmesi anlamına gelir.
+ Guaranteed execution, WorkManager'ın işleminizi çeşitli durumlarda başlatma mantığını üstlenmesi anlamına gelir; hatta uygulamanızdan çıkmış olsanız bile.
 
 ----------------------------------------
 
 WorkManager kullanımı için iyi örnekler:
 
-En son haber hikayelerini periyodik olarak sorgulamak.
-Bir görüntüye filtre uygulamak ve ardından bu görüntüyü kaydetmek.
-Yerel verileri ağ ile periyodik olarak senkronize etmek.
+ En son haber hikayelerini periyodik olarak sorgulamak.
+ Bir görüntüye filtre uygulamak ve ardından bu görüntüyü kaydetmek.
+ Yerel verileri ağ ile periyodik olarak senkronize etmek.
+
+----------------------------------------
+
+WorkManager Classes:
+
+Worker / CoroutineWorker:
+ Worker, bir arka plan iş parçacığında senkronize olarak iş yapan bir sınıftır. Ancak, asenkron çalışmaya
+ odaklandığımız için Kotlin Coroutines ile uyumlu olan CoroutineWorker sınıfını kullanabiliriz
+
+WorkRequest:
+ Bu sınıf, bir iş yapılması talebini temsil eder. WorkRequest, işçinin (worker) bir kez mi yoksa periyodik olarak mı çalışması gerektiğini tanımladığınız yerdir. Ayrıca, işin çalıştırılmasından önce belirli koşulların karşılanmasını gerektiren kısıtlamalar da eklenebilir. Örneğin, cihazın şarjda olması talep edilen işi başlatmadan önce bir koşul olarak belirlenebilir. WorkRequest oluştururken, Worker/CoroutineWorker sınıfınızı bu isteğin bir parçası olarak belirtirsiniz.
+
+WorkManager:
+ Bu sınıf, WorkRequest'i zamanlar ve çalıştırır. Sistem kaynaklarına olan yükü dağıtarak ve belirttiğiniz kısıtlamaları gözeterek bir WorkRequest'i zamanlar ve yürütür.
+
+
+
+
+
+
+
+
+
+
+
+
