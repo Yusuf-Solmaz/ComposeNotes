@@ -1,0 +1,14 @@
+WorkManager Nedir?
+
+WorkManager, Android Jetpack'in bir parçası olan ve arka plan işlemleri için kullanılan bir Mimari Bileşen'dir.
+
+Opportunistic execution, WorkManager'ın arka plan işlemini mümkün olan en kısa sürede gerçekleştirmesi anlamına gelir.
+Guaranteed execution, WorkManager'ın işleminizi çeşitli durumlarda başlatma mantığını üstlenmesi anlamına gelir; hatta uygulamanızdan çıkmış olsanız bile.
+
+----------------------------------------
+
+WorkManager kullanımı için iyi örnekler:
+
+En son haber hikayelerini periyodik olarak sorgulamak.
+Bir görüntüye filtre uygulamak ve ardından bu görüntüyü kaydetmek.
+Yerel verileri ağ ile periyodik olarak senkronize etmek.
