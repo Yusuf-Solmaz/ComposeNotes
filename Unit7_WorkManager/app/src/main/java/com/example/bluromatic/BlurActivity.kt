@@ -28,12 +28,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.bluromatic.ui.BluromaticScreen
@@ -105,19 +109,21 @@ fun RequestNotificationPermission(
     ) {
 
         if (showDialog.value) {
-            ShowNotificationDialog(
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-                onConfirm = {
-                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    showDialog.value = false
-                },
-                onDismiss = {
-                    Toast.makeText(context, "Bildirim izni verilmedi", Toast.LENGTH_SHORT).show()
-                    showDialog.value = false
-                }
-            )
+            Box(modifier = Modifier.fillMaxSize().alpha(0.3f)) {
+                ShowNotificationDialog(
+                    onDismissRequest = {
+                        showDialog.value = false
+                    },
+                    onConfirm = {
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        showDialog.value = false
+                    },
+                    onDismiss = {
+                        Toast.makeText(context, "Bildirim izni verilmedi", Toast.LENGTH_SHORT).show()
+                        showDialog.value = false
+                    }
+                )
+            }
         }
     }
     // Bildirim izni verildiyse ve dialog kapatıldıysa içerik gösterilmeye devam eder
