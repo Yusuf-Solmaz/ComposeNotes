@@ -32,10 +32,11 @@ import com.example.bluromatic.workers.SaveImageToFileWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
+class WorkManagerBluromaticRepository(context: Context,val workManager: WorkManager) : BluromaticRepository {
 
     private var imageUri: Uri = context.getImageUri()
-    private val workManager = WorkManager.getInstance(context)
+
+
 
     override val outputWorkInfo: Flow<WorkInfo?> = MutableStateFlow(null)
 

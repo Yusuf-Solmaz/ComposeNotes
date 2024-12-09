@@ -17,11 +17,14 @@
 package com.example.bluromatic.data
 
 import android.content.Context
+import androidx.work.WorkManager
 
 interface AppContainer {
     val bluromaticRepository: BluromaticRepository
+    val worker: WorkManager
 }
 
 class DefaultAppContainer(context: Context) : AppContainer {
-    override val bluromaticRepository = WorkManagerBluromaticRepository(context)
+    override val worker: WorkManager =  WorkManager.getInstance(context)
+    override val bluromaticRepository = WorkManagerBluromaticRepository(context,worker)
 }
