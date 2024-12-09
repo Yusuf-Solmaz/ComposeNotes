@@ -27,7 +27,12 @@ WorkRequest:
 WorkManager:
  Bu sınıf, WorkRequest'i zamanlar ve çalıştırır. Sistem kaynaklarına olan yükü dağıtarak ve belirttiğiniz kısıtlamaları gözeterek bir WorkRequest'i zamanlar ve yürütür.
 
+----------------------------------------
 
+ İki tür WorkRequest vardır:
+
+OneTimeWorkRequest: Sadece bir kez çalışan bir WorkRequest.
+PeriodicWorkRequest: Belirli bir döngüde tekrarlı olarak çalışan bir WorkRequest.
 
 
 
