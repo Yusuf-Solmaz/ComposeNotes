@@ -26,6 +26,7 @@ import androidx.work.WorkInfo
 import com.example.bluromatic.BluromaticApplication
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.STOP_TIMEOUT_MILLIS
+import com.example.bluromatic.WORKER_ERROR
 import com.example.bluromatic.data.BlurAmountData
 import com.example.bluromatic.data.BluromaticRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,6 +47,7 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
         .map {
         info ->
             val outputImageUri = info.outputData.getString(KEY_IMAGE_URI)
+            val errorMessage = info.outputData.getString(WORKER_ERROR)
         when{
             info.state.isFinished && !outputImageUri.isNullOrEmpty() -> {
                 BlurUiState.Complete(outputUri = outputImageUri)
@@ -53,7 +55,11 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
             info.state == WorkInfo.State.CANCELLED -> {
                 BlurUiState.Default
             }
-            else -> BlurUiState.Loading
+            (info.state == WorkInfo.State.FAILED) && !errorMessage.isNullOrEmpty() ->{
+
+                BlurUiState.Error(errorMessage)
+            }
+            else ->  BlurUiState.Loading
         }
     }.stateIn(
         scope = viewModelScope,
@@ -94,5 +100,6 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
 sealed interface BlurUiState {
     object Default : BlurUiState
     object Loading : BlurUiState
+    data class Error(val error:String): BlurUiState
     data class Complete(val outputUri: String) : BlurUiState
 }

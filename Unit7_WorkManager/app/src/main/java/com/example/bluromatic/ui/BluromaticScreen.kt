@@ -164,6 +164,10 @@ private fun BlurActions(
                 FilledTonalButton({ onSeeFileClick(blurUiState.outputUri) })
                 { Text(stringResource(R.string.see_file)) }
             }
+
+            is BlurUiState.Error -> {
+                Text(blurUiState.error)
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import com.example.bluromatic.DELAY_TIME_MILLIS
 import com.example.bluromatic.KEY_BLUR_LEVEL
 import com.example.bluromatic.KEY_IMAGE_URI
 import com.example.bluromatic.R
+import com.example.bluromatic.WORKER_ERROR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -60,7 +61,8 @@ class BlurWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, 
                     applicationContext.resources.getString(R.string.error_applying_blur),
                     throwable
                 )
-                Result.failure()
+                val failureData = workDataOf(WORKER_ERROR to (throwable.localizedMessage ?: "Something Went Wrong") )
+                Result.failure(failureData)
             }
         }
     }

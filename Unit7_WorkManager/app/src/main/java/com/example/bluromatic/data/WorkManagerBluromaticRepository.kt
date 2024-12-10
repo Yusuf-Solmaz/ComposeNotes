@@ -19,8 +19,10 @@ package com.example.bluromatic.data
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.asFlow
+import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -69,6 +71,11 @@ class WorkManagerBluromaticRepository(context: Context,val workManager: WorkMana
 
         // Input the Uri for the blur operation along with the blur level
         blurBuilder.setInputData(createInputDataForWorkRequest(blurLevel, imageUri))
+            .setConstraints(Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .setRequiresStorageNotLow(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build())
 
         continuation = continuation.then(blurBuilder.build())
 
