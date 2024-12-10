@@ -22,7 +22,8 @@ Worker / CoroutineWorker:
  odaklandığımız için Kotlin Coroutines ile uyumlu olan CoroutineWorker sınıfını kullanabiliriz
 
 WorkRequest:
- Bu sınıf, bir iş yapılması talebini temsil eder. WorkRequest, işçinin (worker) bir kez mi yoksa periyodik olarak mı çalışması gerektiğini tanımladığınız yerdir. Ayrıca, işin çalıştırılmasından önce belirli koşulların karşılanmasını gerektiren kısıtlamalar da eklenebilir. Örneğin, cihazın şarjda olması talep edilen işi başlatmadan önce bir koşul olarak belirlenebilir. WorkRequest oluştururken, Worker/CoroutineWorker sınıfınızı bu isteğin bir parçası olarak belirtirsiniz.
+ Bu sınıf, bir iş yapılması talebini temsil eder. WorkRequest, işçinin (worker) bir kez mi yoksa periyodik olarak mı çalışması gerektiğini tanımladığınız yerdir.
+ Ayrıca, işin çalıştırılmasından önce belirli koşulların karşılanmasını gerektiren kısıtlamalar da eklenebilir. Örneğin, cihazın şarjda olması talep edilen işi başlatmadan önce bir koşul olarak belirlenebilir. WorkRequest oluştururken, Worker/CoroutineWorker sınıfınızı bu isteğin bir parçası olarak belirtirsiniz.
 
 WorkManager:
  Bu sınıf, WorkRequest'i zamanlar ve çalıştırır. Sistem kaynaklarına olan yükü dağıtarak ve belirttiğiniz kısıtlamaları gözeterek bir WorkRequest'i zamanlar ve yürütür.
@@ -34,9 +35,43 @@ WorkManager:
 OneTimeWorkRequest: Sadece bir kez çalışan bir WorkRequest.
 PeriodicWorkRequest: Belirli bir döngüde tekrarlı olarak çalışan bir WorkRequest.
 
+----------------------------------------
 
+ Unique Work:
 
+Bazen aynı anda yalnızca bir iş zincirinin çalışmasını isteyenilebilir. Örneğin, yerel verilerinizi sunucuyla senkronize eden bir iş zinciriniz olduğunu düşünelim.
+Muhtemelen yeni bir senkronizasyon başlatmadan önce ilk senkronizasyonun tamamlanmasını istersiniz. Bunu gerçekleştirmek için beginWith() yerine beginUniqueWork() kullanılır.
 
+Ayrıca bir ExistingWorkPolicy nesnesi geçirmeniz gerekir. Bu nesne, iş zaten mevcutsa Android işletim sisteminin ne yapacağını belirler. Olası ExistingWorkPolicy değerleri şunlardır:
+
+REPLACE: Mevcut işi yeni iş zinciriyle değiştirir.
+KEEP: Mevcut işi korur ve yeni iş zincirini yok sayar.
+APPEND: Yeni iş zincirini mevcut zincire ekler.
+APPEND_OR_REPLACE: Yeni işi mevcut zincire ekler, ancak zincir uyumsuzsa mevcut işi değiştirir.
+
+----------------------------------------
+
+ WorkManager ile Flow kullanımı:
+
+WorkManager kullanarak arka planda çalışan işlemleri yönetmek ve izlemekle ilgili farklı senaryoları ele alınabilir.
+
+getWorkInfoByIdLiveData(): Bu metodu kullanarak, belirli bir işin durumunu ID'sine göre takip edebilirsiniz.
+return değeri -> LiveData<WorkInfo>
+
+getWorkInfosForUniqueWorkLiveData(): Bir zincir içinde olan tüm işlerin durumunu takip etmek için kullanılabilir.
+return değeri -> LiveData<List<WorkInfo>>
+
+getWorkInfosByTagLiveData(): Etiketlere dayalı olarak işler gruplandırılabilir ve her gruptaki işlerin durumunu bu
+metot ile takip edebilirsiniz. Bu, benzer türdeki işlerin durumu üzerinde toplu işlemler yapmanızı sağlar.
+return değeri: LiveData<List<WorkInfo>>
+
+* return değerleri LiveData olduğu için kullanımda .asFlow() dönüşümü ile Flow'a dönüşüm önerilir.
+
+--
+Bir WorkInfo nesnesi, bir WorkRequest'in mevcut durumu hakkında ayrıntılar içerir, bunlar şunları kapsar:
+
+İşin BLOCKED, CANCELLED, ENQUEUED, FAILED, RUNNING veya SUCCEEDED olup olmadığı.
+WorkRequest tamamlandıysa ve işten herhangi bir çıktı verisi olup olmadığı.
 
 
 
